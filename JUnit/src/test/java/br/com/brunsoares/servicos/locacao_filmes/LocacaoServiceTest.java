@@ -1,8 +1,9 @@
-package br.com.brunsoares.servicos;
+package br.com.brunsoares.servicos.locacao_filmes;
 
-import br.com.brunsoares.entidades.Filme;
-import br.com.brunsoares.entidades.Locacao;
-import br.com.brunsoares.entidades.Usuario;
+import br.com.brunsoares.locacao_filmes.entidades.Filme;
+import br.com.brunsoares.locacao_filmes.entidades.Locacao;
+import br.com.brunsoares.locacao_filmes.entidades.Usuario;
+import br.com.brunsoares.locacao_filmes.servicos.LocacaoService;
 import br.com.brunsoares.utils.DataUtils;
 import org.junit.After;
 import org.junit.Assert;

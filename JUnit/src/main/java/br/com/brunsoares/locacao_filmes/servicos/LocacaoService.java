@@ -1,8 +1,8 @@
-package br.com.brunsoares.servicos;
+package br.com.brunsoares.locacao_filmes.servicos;
 
-import br.com.brunsoares.entidades.Filme;
-import br.com.brunsoares.entidades.Locacao;
-import br.com.brunsoares.entidades.Usuario;
+import br.com.brunsoares.locacao_filmes.entidades.Filme;
+import br.com.brunsoares.locacao_filmes.entidades.Locacao;
+import br.com.brunsoares.locacao_filmes.entidades.Usuario;
 
 import java.util.Date;
 import java.util.List;
@@ -25,9 +25,6 @@ public class LocacaoService {
 		Date dataEntrega = new Date();
 		dataEntrega = adicionarDias(dataEntrega, 1);
 		locacao.setDataRetorno(dataEntrega);
-
-		// Salvando a locação
-		// TODO adicionar método para salvar
 		
 		return locacao;
 	}
