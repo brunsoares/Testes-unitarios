@@ -1,5 +1,6 @@
 package br.com.brunsoares.servicos.locacao_filmes;
 
+import br.com.brunsoares.exceptions.FilmeSemEstoqueException;
 import br.com.brunsoares.locacao_filmes.entidades.Filme;
 import br.com.brunsoares.locacao_filmes.entidades.Locacao;
 import br.com.brunsoares.locacao_filmes.entidades.Usuario;
@@ -54,8 +55,8 @@ public class LocacaoServiceTest {
 
 	}
 
-	@Test(expected = Exception.class)
-	public void testLocacaoServiceSemEstoqueComExcecao() throws Exception {    // Teste espera uma exceção
+	@Test(expected = FilmeSemEstoqueException.class)
+	public void testLocacaoServiceSemEstoqueComExcecao() throws FilmeSemEstoqueException {    // Teste espera uma exceção
 		filmes.add(new Filme("Monstros S.A", 0, 19.99));
 		filmes.add(new Filme("Toy Story", 0, 20.60));
 

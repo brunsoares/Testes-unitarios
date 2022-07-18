@@ -1,5 +1,6 @@
 package br.com.brunsoares.locacao_filmes.servicos;
 
+import br.com.brunsoares.exceptions.FilmeSemEstoqueException;
 import br.com.brunsoares.locacao_filmes.entidades.Filme;
 import br.com.brunsoares.locacao_filmes.entidades.Locacao;
 import br.com.brunsoares.locacao_filmes.entidades.Usuario;
@@ -11,7 +12,7 @@ import static br.com.brunsoares.utils.DataUtils.adicionarDias;
 
 public class LocacaoService {
 	
-	public Locacao alugarFilme(Usuario usuario, List<Filme> filmes) throws Exception {
+	public Locacao alugarFilme(Usuario usuario, List<Filme> filmes) throws FilmeSemEstoqueException {
 		checarEstoque(filmes);
 
 		Locacao locacao = new Locacao();
@@ -37,10 +38,10 @@ public class LocacaoService {
 		return soma;
 	}
 
-	private void checarEstoque(List<Filme> filmes) throws Exception {
+	private void checarEstoque(List<Filme> filmes) throws FilmeSemEstoqueException {
 		for(Filme filme: filmes) {
 			if (filme.getEstoque() == 0) {
-				throw new Exception("Filme sem estoque!");
+				throw new FilmeSemEstoqueException("Filme sem estoque!");
 			}
 		}
 	}
