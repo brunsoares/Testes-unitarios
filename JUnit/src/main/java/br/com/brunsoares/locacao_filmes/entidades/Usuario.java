@@ -1,4 +1,4 @@
-package br.com.brunsoares.entidades;
+package br.com.brunsoares.locacao_filmes.entidades;
 
 import lombok.Getter;
 import lombok.Setter;
