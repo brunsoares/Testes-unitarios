@@ -6,7 +6,6 @@ import br.com.brunsoares.locacao_filmes.entidades.Filme;
 import br.com.brunsoares.locacao_filmes.entidades.Locacao;
 import br.com.brunsoares.locacao_filmes.entidades.Usuario;
 import br.com.brunsoares.locacao_filmes.servicos.LocacaoService;
-import br.com.brunsoares.matchers.DiaSemanaMatcher;
 import br.com.brunsoares.matchers.MatchersList;
 import br.com.brunsoares.utils.DataUtils;
 import org.junit.*;
@@ -54,8 +53,9 @@ public class LocacaoServiceTest {
 		Assert.assertEquals(locacao.getValor(), new Double(40.59));    // Valores iguais
 		Assert.assertTrue(locacao.getUsuario().getNome().equalsIgnoreCase("BrunoSoares"));    // Condição Lógica True
 		Assert.assertThat(new Filme().getNomeFilmes(locacao.getFilmes()), is(listaNomes));	// Validando listas de valores
-		Assert.assertTrue(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()));
-		Assert.assertTrue(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)));
+		// Matchers próprios
+		Assert.assertThat(locacao.getDataLocacao(), MatchersList.checarDataAtual());
+		Assert.assertThat(locacao.getDataRetorno(), MatchersList.checarDataComDiferencaDeDias(1));
 
 	}
 
