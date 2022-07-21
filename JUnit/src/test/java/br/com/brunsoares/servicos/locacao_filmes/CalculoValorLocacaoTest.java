@@ -1,5 +1,6 @@
 package br.com.brunsoares.servicos.locacao_filmes;
 
+import br.com.brunsoares.builders.UsuarioBuilder;
 import br.com.brunsoares.exceptions.FilmeSemEstoqueException;
 import br.com.brunsoares.exceptions.LocacaoException;
 import br.com.brunsoares.locacao_filmes.entidades.Filme;
@@ -15,6 +16,8 @@ import org.junit.runners.Parameterized;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import static br.com.brunsoares.builders.FilmeBuilder.novoFilme;
 
 @RunWith(Parameterized.class)
 public class CalculoValorLocacaoTest {
@@ -32,15 +35,15 @@ public class CalculoValorLocacaoTest {
     @Before
     public void initTests(){
         service = new LocacaoService();
-        usuario = new Usuario("BrunoSoares");
+        usuario = UsuarioBuilder.novoUsuario().retornarUsuario();
     }
 
-    private static Filme filme1 = new Filme("Monstros S.A", 1, 10.00);
-    private static Filme filme2 = new Filme("Toy Story", 1, 10.00);
-    private static Filme filme3 = new Filme("Up Altas Aventuras", 1, 10.00);
-    private static Filme filme4 = new Filme("Universidade Monstros", 1, 10.00);
-    private static Filme filme5 = new Filme("Familia Mitchell e a Revolta das Máquinas", 1, 10.00);
-    private static Filme filme6 = new Filme("Ta Dando Onda", 1, 10.00);
+    private static Filme filme1 = novoFilme("Monstros S.A",  10.00).retornarFilme();
+    private static Filme filme2 = novoFilme("Toy Story", 10.00).retornarFilme();
+    private static Filme filme3 = novoFilme("Up Altas Aventuras",  10.00).retornarFilme();
+    private static Filme filme4 = novoFilme("Universidade Monstros",  10.00).retornarFilme();
+    private static Filme filme5 = novoFilme("Familia Mitchell e a Revolta das Máquinas",  10.00).retornarFilme();
+    private static Filme filme6 = novoFilme("Ta Dando Onda",  10.00).retornarFilme();
 
     @Parameterized.Parameters(name = "{2}")
     public static Collection<Object[]> getParametros(){    // Primeiro Lista de filmes, em seguida valor da locação
