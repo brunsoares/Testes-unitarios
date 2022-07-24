@@ -6,6 +6,8 @@ import br.com.brunsoares.locacao_filmes.entidades.Filme;
 import br.com.brunsoares.locacao_filmes.entidades.Locacao;
 import br.com.brunsoares.locacao_filmes.entidades.Usuario;
 import br.com.brunsoares.locacao_filmes.servicos.LocacaoService;
+import br.com.brunsoares.matchers.DiaSemanaMatcher;
+import br.com.brunsoares.matchers.MatchersList;
 import br.com.brunsoares.utils.DataUtils;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
@@ -101,8 +103,7 @@ public class LocacaoServiceTest {
 		filmes.add(new Filme("Up Altas Aventuras", 1, 10.00));
 		Locacao retorno = service.alugarFilme(usuario, filmes);
 
-		boolean devolucaoNaSegunda = DataUtils.verificarDiaSemana(retorno.getDataRetorno(), Calendar.MONDAY);
-		Assert.assertTrue(devolucaoNaSegunda);
+		Assert.assertThat(retorno.getDataRetorno(), MatchersList.caiNumaSegunda());
 	}
 
 
