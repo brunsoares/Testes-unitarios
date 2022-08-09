@@ -57,6 +57,12 @@ public class LocacaoBuilder {
         return this;
     }
 
+    public LocacaoBuilder comDatasAtrasadas(){
+        locacao.setDataLocacao(DataUtils.obterDataComDiferencaDias(-4));
+        locacao.setDataRetorno(DataUtils.obterDataComDiferencaDias(-2));
+        return this;
+    }
+
     public Locacao retornarLocacao(){
         return locacao;
     }

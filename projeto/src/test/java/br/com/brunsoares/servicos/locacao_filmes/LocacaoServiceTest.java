@@ -141,16 +141,24 @@ public class LocacaoServiceTest {
 
 	@Test
 	public void deveEnviarEmailParaUsuarioAtrasados(){
-		Usuario usuarioNovo = UsuarioBuilder.novoUsuario().retornarUsuario();
+		Usuario usuarioAtrasado = UsuarioBuilder.novoUsuario().retornarUsuario();
+		Usuario usuarioNormal = UsuarioBuilder.novoUsuario().comNome("Nelson").retornarUsuario();
 		List<Locacao> locacoesPendentes = Arrays.asList(
 				LocacaoBuilder.umaLocacao()
-							  .comUsuario(usuarioNovo)
-							  .comDataRetorno(DataUtils.obterDataComDiferencaDias(-2))
-							  .retornarLocacao());
+							  .comUsuario(usuarioAtrasado)
+							  .comDatasAtrasadas()
+							  .retornarLocacao(),
+				LocacaoBuilder.umaLocacao()
+						      .comUsuario(usuarioNormal)
+							  .retornarLocacao()
+				);
+
 		Mockito.when(dao.obterLocacoesPendentes()).thenReturn(locacoesPendentes);
 		service.notificarUsuariosComAtraso();
 		// Usando mockito para verificar casos
-		Mockito.verify(emailService).notificarAtraso(usuarioNovo);
+		Mockito.verify(emailService).notificarAtraso(usuarioAtrasado);
+		Mockito.verify(emailService, Mockito.never()).notificarAtraso(usuarioNormal);
+		Mockito.verifyNoMoreInteractions(emailService);
 	}
 
 
