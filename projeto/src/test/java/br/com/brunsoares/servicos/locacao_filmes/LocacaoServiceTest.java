@@ -16,9 +16,13 @@ import br.com.brunsoares.matchers.MatchersList;
 import br.com.brunsoares.utils.DataUtils;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.*;
 
@@ -26,6 +30,8 @@ import static br.com.brunsoares.builders.FilmeBuilder.novoFilme;
 import static br.com.brunsoares.builders.FilmeBuilder.novoFilmeSemEstoque;
 import static org.hamcrest.CoreMatchers.is;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({LocacaoService.class, DataUtils.class})
 public class LocacaoServiceTest {
 
 	private LocacaoService service;
@@ -65,7 +71,7 @@ public class LocacaoServiceTest {
 
 	@Test
 	public void deveAlugarFilme() throws Exception {
-		Assume.assumeFalse(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));	// Executa quando não for Sábado
+		PowerMockito.whenNew(Date.class).withNoArguments().thenReturn(DataUtils.obterData(22, 2, 2022));
 
 		// Ação
 		filmes.add(novoFilme("Monstros S.A", 19.99).retornarFilme());
@@ -80,7 +86,8 @@ public class LocacaoServiceTest {
 		// Matchers próprios
 		Assert.assertThat(locacao.getDataLocacao(), MatchersList.checarDataAtual());
 		Assert.assertThat(locacao.getDataRetorno(), MatchersList.checarDataComDiferencaDeDias(1));
-
+		Assert.assertThat(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterData(23, 2, 2022)), is(true));
+		Assert.assertThat(DataUtils.isMesmaData(locacao.getDataLocacao(), DataUtils.obterData(22, 2, 2022)), is(true));
 	}
 
 	@Test(expected = FilmeSemEstoqueException.class)
@@ -122,7 +129,7 @@ public class LocacaoServiceTest {
 
 	@Test
 	public void deveDevolverNaSegundaAoAlugarNoSabado() throws Exception {
-		Assume.assumeTrue(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));	// Executa apenas no sábado
+		PowerMockito.whenNew(Date.class).withNoArguments().thenReturn(DataUtils.obterData(19, 2, 2022));
 
 		filmes.add(novoFilme("Up Altas Aventuras",  10.00).retornarFilme());
 		Locacao retorno = service.alugarFilme(usuario, filmes);
