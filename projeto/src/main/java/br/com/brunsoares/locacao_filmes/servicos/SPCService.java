@@ -4,5 +4,5 @@ import br.com.brunsoares.locacao_filmes.entidades.Usuario;
 
 public interface SPCService {
 
-    public boolean usuarioNegativado(Usuario usuario);
+    public boolean usuarioNegativado(Usuario usuario) throws Exception;
 }

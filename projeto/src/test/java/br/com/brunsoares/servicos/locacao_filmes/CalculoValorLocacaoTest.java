@@ -64,7 +64,7 @@ public class CalculoValorLocacaoTest {
     }
 
     @Test
-    public void deveCalcularValorDaLocacaoConsiderandoDescontos() throws FilmeSemEstoqueException, LocacaoException {
+    public void deveCalcularValorDaLocacaoConsiderandoDescontos() throws Exception {
 
         Locacao resultado = service.alugarFilme(usuario, filmes);
 

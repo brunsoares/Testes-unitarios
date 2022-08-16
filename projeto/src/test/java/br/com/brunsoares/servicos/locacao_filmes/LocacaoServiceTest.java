@@ -1,5 +1,6 @@
 package br.com.brunsoares.servicos.locacao_filmes;
 
+import br.com.brunsoares.builders.FilmeBuilder;
 import br.com.brunsoares.builders.LocacaoBuilder;
 import br.com.brunsoares.builders.UsuarioBuilder;
 import br.com.brunsoares.daos.LocacaoDAO;
@@ -15,6 +16,8 @@ import br.com.brunsoares.matchers.MatchersList;
 import br.com.brunsoares.utils.DataUtils;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.*;
@@ -81,7 +84,7 @@ public class LocacaoServiceTest {
 	}
 
 	@Test(expected = FilmeSemEstoqueException.class)
-	public void deveLancarExcecaoDeFilmeSemEstoque() throws FilmeSemEstoqueException, LocacaoException {    // Teste espera uma exceção
+	public void deveLancarExcecaoDeFilmeSemEstoque() throws Exception {    // Teste espera uma exceção
 		filmes.add(novoFilmeSemEstoque("Monstros S.A", 19.99).retornarFilme());
 		filmes.add(novoFilmeSemEstoque("Toy Story", 20.60).retornarFilme());
 
@@ -103,7 +106,7 @@ public class LocacaoServiceTest {
 	}
 
 	@Test
-	public void naoDevePermitirAlugarSemUsuario() throws FilmeSemEstoqueException, LocacaoException {
+	public void naoDevePermitirAlugarSemUsuario() throws Exception {
 		filmes.add(novoFilme("Monstros S.A", 19.99).retornarFilme());
 		exception.expect(LocacaoException.class);
 		exception.expectMessage("Usuário vazio!");
@@ -111,14 +114,14 @@ public class LocacaoServiceTest {
 	}
 
 	@Test
-	public void naoDevePermitirAlugarSemListaDeFilmes() throws FilmeSemEstoqueException, LocacaoException {
+	public void naoDevePermitirAlugarSemListaDeFilmes() throws Exception {
 		exception.expect(LocacaoException.class);
 		exception.expectMessage("Filme vazio!");
 		service.alugarFilme(usuario, null);
 	}
 
 	@Test
-	public void deveDevolverNaSegundaAoAlugarNoSabado() throws FilmeSemEstoqueException, LocacaoException {
+	public void deveDevolverNaSegundaAoAlugarNoSabado() throws Exception {
 		Assume.assumeTrue(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));	// Executa apenas no sábado
 
 		filmes.add(novoFilme("Up Altas Aventuras",  10.00).retornarFilme());
@@ -128,7 +131,7 @@ public class LocacaoServiceTest {
 	}
 
 	@Test
-	public void naoDeveAlugarFilmeParaNegativadosSPC() throws FilmeSemEstoqueException, LocacaoException {
+	public void naoDeveAlugarFilmeParaNegativadosSPC() throws Exception {
 		filmes.add(novoFilme("Monstros S.A", 19.99).retornarFilme());
 		// Alterando fluxo de um mock para retornar true
 		Mockito.when(spcService.usuarioNegativado(usuario)).thenReturn(true);
@@ -161,6 +164,29 @@ public class LocacaoServiceTest {
 		Mockito.verifyNoMoreInteractions(emailService);
 	}
 
+	@Test
+	public void deveTratarErroNoSPC() throws Exception {
+		filmes.add(FilmeBuilder.novoFilme("Sonic", 20.0).retornarFilme());
+		Mockito.when(spcService.usuarioNegativado(usuario)).thenThrow(new Exception("Falha no SPC!"));
+
+		exception.expect(LocacaoException.class);
+		exception.expectMessage("Problemas com SPC, favor tentar novamente!");
+
+		service.alugarFilme(usuario, filmes);
+	}
+
+	@Test
+	public void deveProrrogarUmaLocacaoPelosDias(){
+		Locacao locacao = LocacaoBuilder.umaLocacao().retornarLocacao();
+		service.prorrogarLocacao(locacao, 4);
+		ArgumentCaptor<Locacao> argumentoCapturado = ArgumentCaptor.forClass(Locacao.class);
+		Mockito.verify(dao).salvar(argumentoCapturado.capture());
+		Locacao locacaoProrrogada = argumentoCapturado.getValue();
+
+		Assert.assertThat(locacaoProrrogada.getValor(), is(80.0));
+		Assert.assertThat(locacaoProrrogada.getDataLocacao(), MatchersList.checarDataAtual());
+		Assert.assertThat(locacaoProrrogada.getDataRetorno(), MatchersList.checarDataComDiferencaDeDias(4));
+	}
 
 	/*
 	public static void main(String[] args) {
