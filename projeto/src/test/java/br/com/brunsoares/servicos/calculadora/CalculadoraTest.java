@@ -2,10 +2,14 @@ package br.com.brunsoares.servicos.calculadora;
 
 import br.com.brunsoares.calculadora.Calculadora;
 import br.com.brunsoares.exceptions.DivisaoPorZeroException;
+import br.com.brunsoares.runners.ParallelRunner;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(ParallelRunner.class)
 public class CalculadoraTest {
 
     private  Calculadora calculadora;
